@@ -8,6 +8,7 @@ message Request {
       GET      = 1;
       SET      = 2;
       DEL      = 3;
+      SETEPH   = 4;
       REV      = 5;
       WAIT     = 6;
       NOP      = 7;

@@ -294,6 +294,23 @@ func (c *Conn) Set(file string, oldRev int64, body []byte) (newRev int64, err er
 	return t.resp.GetRev(), nil
 }
 
+// Sets the contents of file to body, if it hasn't been modified since oldRev.
+// goes away once client that created it disconnects
+func (c *Conn) SetEph(file string, oldRev int64, body []byte) (newRev int64, err error) {
+	var t txn
+	t.req.Verb = newRequest_Verb(request_SETEPH)
+	t.req.Path = &file
+	t.req.Value = body
+	t.req.Rev = &oldRev
+	
+	err = c.call(&t)
+	if err != nil {
+		return
+	}
+
+	return t.resp.GetRev(), nil
+}
+
 // Deletes file, if it hasn't been modified since rev.
 func (c *Conn) Del(file string, rev int64) error {
 	var t txn

@@ -128,6 +128,7 @@ func main() {
 	cmd := flag.Arg(0)
 
 	c, ok := cmds[cmd]
+	fmt.Fprintln(os.Stderr, "Running command:", cmd)
 	if !ok {
 		fmt.Fprintln(os.Stderr, "Unknown command:", cmd)
 		usage()

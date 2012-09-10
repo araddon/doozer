@@ -4,10 +4,12 @@
 package doozer
 
 import proto "code.google.com/p/goprotobuf/proto"
+import "encoding/json"
 import "math"
 
-// Reference proto and math imports to suppress error if they are not otherwise used.
-var _ = proto.GetString
+// Reference proto, json, and math imports to suppress error if they are not otherwise used.
+var _ = proto.Marshal
+var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type request_Verb int32
@@ -16,6 +18,7 @@ const (
 	request_GET    request_Verb = 1
 	request_SET    request_Verb = 2
 	request_DEL    request_Verb = 3
+	request_SETEPH request_Verb = 4
 	request_REV    request_Verb = 5
 	request_WAIT   request_Verb = 6
 	request_NOP    request_Verb = 7
@@ -29,6 +32,7 @@ var request_Verb_name = map[int32]string{
 	1:  "GET",
 	2:  "SET",
 	3:  "DEL",
+	4:  "SETEPH",
 	5:  "REV",
 	6:  "WAIT",
 	7:  "NOP",
@@ -41,6 +45,7 @@ var request_Verb_value = map[string]int32{
 	"GET":    1,
 	"SET":    2,
 	"DEL":    3,
+	"SETEPH": 4,
 	"REV":    5,
 	"WAIT":   6,
 	"NOP":    7,
@@ -55,6 +60,7 @@ func newRequest_Verb(x request_Verb) *request_Verb {
 	e := request_Verb(x)
 	return &e
 }
+
 func (x request_Verb) Enum() *request_Verb {
 	p := new(request_Verb)
 	*p = x
@@ -62,6 +68,17 @@ func (x request_Verb) Enum() *request_Verb {
 }
 func (x request_Verb) String() string {
 	return proto.EnumName(request_Verb_name, int32(x))
+}
+func (x request_Verb) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
+func (x *request_Verb) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(request_Verb_value, data, "request_Verb")
+	if err != nil {
+		return err
+	}
+	*x = request_Verb(value)
+	return nil
 }
 
 type response_Err int32
@@ -110,11 +127,6 @@ var response_Err_value = map[string]int32{
 	"NOENT":        22,
 }
 
-// newResponse_Err is deprecated. Use x.Enum() instead.
-func newResponse_Err(x response_Err) *response_Err {
-	e := response_Err(x)
-	return &e
-}
 func (x response_Err) Enum() *response_Err {
 	p := new(response_Err)
 	*p = x
@@ -124,7 +136,18 @@ func (x response_Err) String() string {
 	return proto.EnumName(response_Err_name, int32(x))
 }
 func (x response_Err) Error() string {
-	return proto.EnumName(response_Err_name, int32(x))
+       return proto.EnumName(response_Err_name, int32(x))
+}
+func (x response_Err) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
+func (x *response_Err) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(response_Err_value, data, "response_Err")
+	if err != nil {
+		return err
+	}
+	*x = response_Err(value)
+	return nil
 }
 
 type request struct {
